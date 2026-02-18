@@ -1,0 +1,24 @@
+import psutil
+import time
+import os
+from datetime import datetime
+
+THRESHOLD = 85
+SERVICE_NAME = "nginx"
+
+def check_cpu():
+    return psutil.cpu_percent(interval=5)
+
+def restart_service():
+    os.system(f"sudo systemctl restart {SERVICE_NAME}")
+    with open("incident.log", "a") as f:
+        f.write(f"{datetime.now()} - Restarted {SERVICE_NAME} due to high CPU\n")
+
+while True:
+    cpu = check_cpu()
+    print(f"Current CPU: {cpu}%")
+
+    if cpu > THRESHOLD:
+        restart_service()
+
+    time.sleep(60)
