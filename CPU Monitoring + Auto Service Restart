@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 
 THRESHOLD = 85
-SERVICE_NAME = "nginx"
+SERVICE_NAME = "****"
 
 def check_cpu():
     return psutil.cpu_percent(interval=5)
