@@ -1,0 +1,27 @@
+import subprocess
+import json
+
+def get_crashing_pods(namespace="default"):
+    result = subprocess.run(
+        ["kubectl", "get", "pods", "-n", namespace, "-o", "json"],
+        capture_output=True, text=True
+    )
+    pods = json.loads(result.stdout)["items"]
+    crashing_pods = [
+        pod["metadata"]["name"]
+        for pod in pods
+        if pod["status"]["phase"] != "Running"
+        and any(c.get("reason") == "CrashLoopBackOff" for c in pod["status"].get("containerStatuses", []))
+    ]
+    return crashing_pods
+
+def restart_pods(pods, namespace="default"):
+    for pod in pods:
+        subprocess.run(["kubectl", "delete", "pod", pod, "-n", namespace])
+        print(f"Restarted pod: {pod}")
+
+pods = get_crashing_pods("app-namespace")
+  if pods:
+      restart_pods(pods, "app-namespace")
+  else:
+      print("No crashing pods found.")
