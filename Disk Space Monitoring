@@ -1,0 +1,21 @@
+import shutil
+import smtplib
+from email.message import EmailMessage
+
+THRESHOLD = 75
+
+def send_alert(usage):
+    msg = EmailMessage()
+    msg.set_content(f"Disk usage critical: {usage}%")
+    msg["Subject"] = "Disk Alert"
+    msg["From"] = "monitor@company.com"
+    msg["To"] = "admin@company.com"
+
+    with smtplib.SMTP("localhost") as server:
+        server.send_message(msg)
+
+total, used, free = shutil.disk_usage("/")
+usage_percent = (used / total) * 100
+
+if usage_percent > THRESHOLD:
+    send_alert(round(usage_percent, 2))
