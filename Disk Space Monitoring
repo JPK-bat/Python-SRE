@@ -8,8 +8,8 @@ def send_alert(usage):
     msg = EmailMessage()
     msg.set_content(f"Disk usage critical: {usage}%")
     msg["Subject"] = "Disk Alert"
-    msg["From"] = "monitor@company.com"
-    msg["To"] = "admin@company.com"
+    msg["From"] = "xyz@abc.com"
+    msg["To"] = "stu@abc.com"
 
     with smtplib.SMTP("localhost") as server:
         server.send_message(msg)
