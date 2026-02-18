@@ -1,0 +1,12 @@
+import boto3
+
+def check_ec2_health(region='us-west-1'):
+    ec2 = boto3.client('ec2', region_name=region)
+    statuses = ec2.describe_instance_status(IncludeAllInstances=True)['InstanceStatuses']
+    for status in statuses:
+        instance_id = status['InstanceId']
+        system_status = status['SystemStatus']['Status']
+        instance_status = status['InstanceStatus']['Status']
+        print(f"{instance_id}: System={system_status}, Instance={instance_status}")
+
+check_ec2_health()
