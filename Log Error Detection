@@ -1,0 +1,15 @@
+def scan_log(file_path):
+    error_count = 0
+
+    with open(file_path, "r") as file:
+        for line in file:
+            if "ERROR" in line or "Exception" in line:
+                error_count += 1
+
+    return error_count
+
+log_file = "application.log"
+errors = scan_log(log_file)
+
+if errors > 10:
+    print(f"High error rate detected: {errors} errors")
